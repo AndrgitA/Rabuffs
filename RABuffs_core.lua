@@ -8,6 +8,11 @@ RABuffs_Version = "0.12.0";
 RABuffs_DeciVersion = 0.100300;
 
 RABui_Settings = {};
+RABconfig = {}
+RABconfigDefault = {
+	minimize = false,
+	minimizeSize = 6,
+}
 RABui_DefSettings = {
 	Layout = {},
 	updateInterval = 0.5,
@@ -192,6 +197,12 @@ function RAB_StartUp()
 		end
 	end
 	RABui_DefSettings = nil;
+
+	for key, val in RABconfigDefault do
+		if (RABconfig[key] == nil) then
+			RABconfig[key] = val;
+		end
+	end
 
 	-- Migrate old profile system
 	RAB_MigrateOldProfiles();

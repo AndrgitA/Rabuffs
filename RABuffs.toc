@@ -3,7 +3,7 @@
 ## Notes: Monitors a raid / party group, displaying various statistics.
 ## OptionalDeps: CT_RaidAssist, SlashHelp
 ## SavedVariables: RABui_Settings
-## SavedVariablesPerCharacter: RABui_IsUIShown
+## SavedVariablesPerCharacter: RABui_IsUIShown, RABconfig
 ## X-Version: 0.12.0
 ## X-URL: http://www.curse-gaming.com
 RABuffs_strings.lua

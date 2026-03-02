@@ -115,6 +115,9 @@ sRAB_LOCALIZATION["enUS"] = function(ui, output, spells)
         sRAB_Settings_BarDetail_PriorityLess = "Less often";
         sRAB_Settings_BarDetail_PriorityMore = "More often";
         sRAB_Settings_BarDetail_PriorityTip = "%ss";
+        sRAB_Settings_BarDetail_minimizeSize = "Count bars in minimize mode: %d"
+        sRAB_Settings_BarDetail_minimizeSizeMin = "min";
+        sRAB_Settings_BarDetail_minimizeSizeMax = "max";
         sRAB_Settings_BarDetail_ClassesAll = "(No class restriction)";
         sRAB_Settings_BarDetail_ClassesSome = "%s";
         sRAB_Settings_BarDetail_GroupsAll = "(No group restriction)";
@@ -158,7 +161,7 @@ sRAB_LOCALIZATION["enUS"] = function(ui, output, spells)
         "If unchecked, the \"CTRL+Click to ... SHIFT to invert\" line will not appear in bar tooltips.";
         sRAB_Settings_Option_lockwindow = "Lock UI position";
         sRAB_Settings_Option_lockwindow_Description = "Stops you from accidentally moving the RABuffs window.";
-        sRAB_Settings_Option_colorizechat = "Color incoming <Buffs> messages";
+        sRAB_Settings_Option_colorizechat = "Color inc. <Buffs> msgs";
         sRAB_Settings_Option_colorizechat_Description =
         "Colors player names rather than displaying their class as text in incoming <Buffs> messages.";
         sRAB_Settings_Option_showsolo = "Display while soloing";
@@ -242,6 +245,7 @@ sRAB_LOCALIZATION["enUS"] = function(ui, output, spells)
 
         sRAB_Menu_HideWindow = "Hide Window";
         sRAB_Menu_Settings = "Configure";
+        sRAB_Menu_Minimize = "Minimize/Maximize";
         sRAB_Menu_HiddenWindow = "[RABuffs] UI frame has been hidden. Use /rab show to make it visible again.";
 
         sRAB_VersionCheck_BeginGuild = "[Version] Checking guild's RABuffs versions.";

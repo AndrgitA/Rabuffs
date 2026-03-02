@@ -191,6 +191,8 @@ RAB_Buffs = {
 	-- Spell Consumes --
 	flask = { name = "Flask of Supreme Power", identifiers = { { tooltip = "Supreme Power", texture = "INV_Potion_41", spellId = 17628 } }, buffFunc = RAB_UseItem, itemId = 13512, grouping = "Spell" },
 	greaterarcane = { name = "Greater Arcane Elixir", identifiers = { { tooltip = "Greater Arcane Elixir", texture = "INV_Potion_25", spellId = 17539 } }, buffFunc = RAB_UseItem, itemId = 13454, grouping = "Spell" },
+	greaterarcanepower = { name = "Elixir of Greater Arcane Power", identifiers = { { tooltip = "Greater Arcane Power", texture = "Spell_Holy_FlashHeal", spellId = 56545 } }, buffFunc = RAB_UseItem, itemId = 55048, grouping = "Spell" },
+	greaterfrostpower = { name = "Elixir of Greater Frost Power", identifiers = { { tooltip = "Greater Frost Power", texture = "INV_Potion_03", spellId = 56544 } }, buffFunc = RAB_UseItem, itemId = 55046, grouping = "Spell" },
 	greaterfirepower = { name = "Elixir of Greater Firepower", identifiers = { { tooltip = "Greater Firepower", texture = "INV_Potion_60", spellId = 26276 } }, buffFunc = RAB_UseItem, itemId = 21546, grouping = "Spell" },
 	greaternaturepower = { name = "Elixir of Greater Nature Power", identifiers = { { tooltip = "Greater Nature Power", texture = "Spell_Nature_SpiritArmor", spellId = 45988 } }, buffFunc = RAB_UseItem, itemId = 50237, grouping = "Spell" },
 	shadowpower = { name = "Elixir of Shadow Power", identifiers = { { tooltip = "Shadow Power", texture = "INV_Potion_46", spellId = 11474 } }, buffFunc = RAB_UseItem, itemId = 9264, grouping = "Spell" },
@@ -200,8 +202,6 @@ RAB_Buffs = {
 	dreamshard = { name = "Dreamshard Elixir", identifiers = { { tooltip = "Dreamshard Elixir", texture = "INV_Potion_25", spellId = 45427 } }, buffFunc = RAB_UseItem, itemId = 61224, grouping = "Spell" },
 	dreamtonic = { name = "Dreamtonic", identifiers = { { tooltip = "Dreamtonic", texture = "INV_Potion_30", spellId = 45489 } }, buffFunc = RAB_UseItem, itemId = 61423, grouping = "Spell" },
 	cerebralcortex = { name = "Cerebral Cortex Compound", identifiers = { { tooltip = "Infallible Mind", texture = "Spell_Ice_Lament", spellId = 10692 } }, buffFunc = RAB_UseItem, itemId = 8423, grouping = "Spell" },
-	greaterarcanepower = { name = "Elixir of Greater Arcane Power", identifiers = { { tooltip = "Greater Arcane Power", texture = "Spell_Holy_FlashHeal", spellId = 56545 } }, buffFunc = RAB_UseItem, itemId = 55048, grouping = "Spell" },
-	greaterfrostpower = { name = "Elixir of Greater Frost Power", identifiers = { { tooltip = "Greater Frost Power", texture = "INV_Potion_03", spellId = 56544 } }, buffFunc = RAB_UseItem, itemId = 55046, grouping = "Spell" },
 
 	-- Melee Consumes --
 	giants = { name = "Elixir of Giants", identifiers = { { tooltip = "Elixir of the Giants", texture = "INV_Potion_61", spellId = 11405 } }, grouping = "Melee", buffFunc = RAB_UseItem, itemId = 9206 },

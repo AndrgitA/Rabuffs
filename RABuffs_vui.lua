@@ -2,6 +2,8 @@
 --  Handles the visual user interface as well as event-triggered routines.
 -- Version 0.10.1
 
+local GetTime = GetTime;
+
 RABui_BarCount = 0;
 RABui_Settings_TabCount = 4;
 
@@ -41,7 +43,7 @@ StaticPopupDialogs["RAB_BARDETAIL_OUT_WHISPERTARGET"] = {
 	timeout = 0,
 	hideOnEscape = 1
 };
-
+LastCountBarsUpdate = 0;
 
 -- Loading Sequence
 function RABui_OnLoad()
@@ -170,6 +172,7 @@ function RABui_SyncBars()
 	end
 
 	local shownBars = 0;
+	local minimizeShow = 0;
 	for i = 1, RABui_BarCount do
 		local showBar = barsToShow[i];
 		local bar = getglobal("RAB_Bar" .. i)
@@ -186,9 +189,21 @@ function RABui_SyncBars()
 			tex2:SetVertexColor(barsToShow[i].color[1], barsToShow[i].color[2], barsToShow[i].color[3]);
 			RABui_SetBarText(i, barsToShow[i].label .. (barsToShow[i].extralabel == nil and "" or barsToShow[i].extralabel));
 		end
+
+		if (RABconfig.minimize) then
+			if (i <= RABconfig.minimizeSize) then
+				minimizeShow = minimizeShow + 1;
+			else
+				bar:Hide();
+			end
+		end
 	end
 
-	RABFrame:SetHeight(10 + shownBars * 12);
+	if (minimizeShow > 0) then
+		RABFrame:SetHeight(10 + minimizeShow * 12);
+	else
+		RABFrame:SetHeight(10 + shownBarCount * 12);
+	end
 	RABui_Settings_Layout_SyncList();
 end
 
@@ -217,7 +232,7 @@ function RABui_UncompleteBar(barid)
 	end
 end
 
-function RABui_SetBarValue(barid, cur, fade, max)
+function RABui_SetBarValue(barid, cur, fade, max, forceUpdate)
 	if (max == nil) then
 		max = tonumber(fade);
 		fade = 0;
@@ -247,7 +262,7 @@ function RABui_SetBarValue(barid, cur, fade, max)
 	end
 
 	local bar = getglobal("RAB_Bar" .. barid);
-	if (bar ~= nil and (cur ~= bar.cur or max ~= bar.max or fade ~= bar.fade)) then
+	if (bar ~= nil and (cur ~= bar.cur or max ~= bar.max or fade ~= bar.fade) or forceUpdate) then
 		bar.cur, bar.max, bar.fade = cur, max, fade;
 		if (cur - fade > 0) then
 			getglobal("RAB_Bar" .. barid .. "Tex"):SetWidth(bar:GetWidth() * (cur - fade) / max);
@@ -294,6 +309,13 @@ function RABui_Menu_Initialize()
 		func = function()
 			RABui_Settings_SelectTab(1);
 			ShowUIPanel(RAB_SettingsFrame);
+		end
+	});
+	UIDropDownMenu_AddButton({
+		text = sRAB_Menu_Minimize,
+		notCheckable = 1,
+		func = function()
+			RAB_ToggleMinimizeWinwod();
 		end
 	});
 	UIDropDownMenu_AddButton({ text = "", disabled = 1, notCheckable = 1 });
@@ -364,7 +386,7 @@ function RABui_Menu_Initialize()
 
 	-- Add profile load options directly
 	profiles = RAB_GetAllProfiles();
-	current = RAB_GetCurrentProfile();
+	current = RABui_Settings.currentProfile or "Default";
 
 	-- Always include Default
 	local hasDefault = false;
@@ -404,15 +426,34 @@ end
 
 function RABui_OnUpdate(elapsed)
 	local i;
-
-	if (RABui_NextUpdate < GetTime()) then
+	local countBars = table.getn(RABui_Bars);
+	local currentTime = GetTime();
+	if (RABui_NextUpdate < currentTime) then
 		RABui_UpdateId = (RABui_UpdateId > 10 and 0 or RABui_UpdateId) + 1;
 		for i = 1, table.getn(RABui_Bars) do
 			if (math.mod(RABui_UpdateId, RABui_Bars[i].priority) == 0 or RABui_TooltipBar == i) then
 				RABui_UpdateBar(i);
 			end
 		end
-		RABui_NextUpdate = GetTime() + RABui_Settings.updateInterval;
+		RABui_NextUpdate = currentTime + RABui_Settings.updateInterval;
+		
+		if (LastCountBarsUpdate ~= countBars) then
+			local max = 0;
+			for i = 1, countBars do
+				local bar = getglobal("RAB_Bar" .. i)
+				local strN = string.len(bar:GetText() or "");
+				if (strN > max) then max = strN; end
+			end
+			local width = math.max(12 + max * 5, 130);
+			RABFrame:SetWidth(width);
+	
+			for i = 1, countBars do
+				getglobal("RAB_Bar" .. i):SetWidth(width - 8);
+				RABui_UpdateBar(i, true)
+			end
+			LastCountBarsUpdate = countBars;
+			-- RABui_SyncBars();
+		end
 	end
 	-- local shiftstate = (IsShiftKeyDown() and 1 or 0) + (IsAltKeyDown() and 2 or 0);
 	-- if (shiftstate ~= RABui_LastShiftState) then
@@ -423,11 +464,11 @@ function RABui_OnUpdate(elapsed)
 	-- end
 end
 
-function RABui_UpdateBar(barid)
+function RABui_UpdateBar(barid, forceUpdate)
 	local i, line, cl;
 	local buffed, fading, total, misc = RAB_CallRaidBuffCheck(RABui_Bars[barid], false, false);
 
-	RABui_SetBarValue(barid, buffed, fading, total);
+	RABui_SetBarValue(barid, buffed, fading, total, forceUpdate);
 
 	RABui_Bars[barid].extralabel = (misc == nil and "" or misc);
 
@@ -1553,7 +1594,7 @@ function RABui_Settings_localizationSelector_UpdateText()
 end
 
 function RABui_UpdateTitle()
-	local currentProfile = RAB_GetCurrentProfile();
+	local currentProfile = RABui_Settings.currentProfile or "Default";
 	RAB_Title:SetText(sRAB_Settings_UIHeader .. ": " .. currentProfile .. "");
 end
 
@@ -1594,6 +1635,9 @@ function RABui_Localize()
 	RAB_BarDetail_UseOnClickLabel:SetText(sRAB_Settings_BarDetail_UseOnClickLabel);
 	RAB_BarDetail_SelfLimitLabel:SetText(sRAB_Settings_BarDetail_SelfLimitLabel);
 
+	RAB_Settings_minimizeSizeLow:SetText(sRAB_Settings_BarDetail_minimizeSizeMin);
+	RAB_Settings_minimizeSizeHigh:SetText(sRAB_Settings_BarDetail_minimizeSizeMax);
+	
 	RABui_UpdateTitle();
 	StaticPopupDialogs["RAB_BARDETAIL_OUT_WHISPERTARGET"].text = sRAB_Settings_BarDetail_WhisperPrompt;
 
@@ -1639,3 +1683,7 @@ RAB_Core_Register("PLAYER_LOGIN", "loadui", RABui_Load);
 RAB_Core_Register("PLAYER_REGEN_DISABLED", "combatStarted", RABui_HideInCombat);
 RAB_Core_Register("PLAYER_REGEN_ENABLED", "combatStopped", RABui_ShowAfterCombat);
 
+function RAB_ToggleMinimizeWinwod()
+	RABconfig.minimize = not RABconfig.minimize;
+	RABui_SyncBars();
+end
