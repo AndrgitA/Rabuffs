@@ -386,7 +386,7 @@ function RABui_Menu_Initialize()
 
 	-- Add profile load options directly
 	profiles = RAB_GetAllProfiles();
-	current = RABui_Settings.currentProfile or "Default";
+	current = RAB_GetCurrentProfile();
 
 	-- Always include Default
 	local hasDefault = false;
@@ -1594,7 +1594,7 @@ function RABui_Settings_localizationSelector_UpdateText()
 end
 
 function RABui_UpdateTitle()
-	local currentProfile = RABui_Settings.currentProfile or "Default";
+	local currentProfile = RAB_GetCurrentProfile();
 	RAB_Title:SetText(sRAB_Settings_UIHeader .. ": " .. currentProfile .. "");
 end
 
